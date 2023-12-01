@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  nest-api:
+    image: tourino-app-nest-api
+    container_name: nest-api
+    ports:
+      - 3000:3000
+      - 5555:5555
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: buildedpostgres
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: POSTGRES_USER
+      POSTGRES_PASSWORD: randompassword
+    ports:
+      - "5432:5432"
+
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  pg-admin:
+    image: dpage/pgadmin4:6
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - "5050:5050"
+volumes:
+  postgres:
+    name: tourino_db
