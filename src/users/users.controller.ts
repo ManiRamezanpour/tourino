@@ -29,7 +29,7 @@ export class UsersController {
     return user;
   }
   // update user profile
-  @Put('/profile/completion/:id')
+  @Put('/profile/update/:id')
   updateProfile(@Req() req, @Param('id') id: number) {
     const { body } = req;
     this.usersService.updateUserProfile(+id, body);

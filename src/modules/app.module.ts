@@ -10,6 +10,10 @@ import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../providers/app.service';
+import { ClientService } from '../client/client.service';
+import {ClientController} from "../client/client.controller";
+import {ClientModule} from "../client/client.module";
+import {PaymentModule} from "../payment/payment.module";
 
 @Module({
   imports: [
@@ -21,6 +25,8 @@ import { AppService } from '../providers/app.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+      ClientModule,
+      PaymentModule
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, PrismaService, UsersService, AuthGuard, JwtService],

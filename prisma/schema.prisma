@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   fullname        String
-  mobile          Int      @unique
+  mobile          Int       @unique
   gender          String
   nationalCode    String
   birthday        String
@@ -24,17 +24,15 @@ model User {
   specialIllness  String
   emergencyMobile String
   otp             String
-  role            Role     @default(USER)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now()) @updatedAt
+  role            Role      @default(USER)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
   team            Team?
+  Clients         Clients?
+  groups          groups?
+  Payments        Payments?
 
   @@map("user")
-}
-
-model Group {
-  id        Int    @id @default(autoincrement())
-  groupName String
 }
 
 model Team {
@@ -48,10 +46,49 @@ model Team {
   bloodCategory String
 }
 
-model Plans {
-  id Int @id @default(autoincrement())
+model Clients {
+  id             Int      @id @default(autoincrement())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         Int      @unique
+  company_name   String
+  company_logo   String
+  province       String
+  city           String
+  Address        String
+  Phones         String
+  Socials        String[]
+  website        String
+  cto_name       String
+  cto_nationCode String
+  cto_birthday   String
+  cto_fatherName String
+  cto_phone      String
+  email          String   @unique
+  password       String
 }
 
+model Payments {
+  id        Int      @id @default(autoincrement())
+  value     String
+  status    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  packege   Packages @relation(fields: [packageId], references: [id])
+  packageId Int      @unique
+}
+
+model Packages {
+  id       Int       @id @default(autoincrement())
+  Payments Payments?
+}
+
+model groups {
+  id       Int  @id @default(autoincrement())
+  client   User @relation(fields: [clientId], references: [id])
+  clientId Int  @unique
+}
+
+// Controll roles
 enum Role {
   CLIENT
   ADMIN

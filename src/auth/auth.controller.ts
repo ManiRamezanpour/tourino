@@ -12,6 +12,7 @@ import { UsersService } from 'src/users/users.service';
 import { codeGenerator } from 'src/utils/RandomCode';
 import { AuthService } from './auth.service';
 import { OTPValidationDto } from './dtos/otp-validation.dto';
+import { LoginDto } from './dtos/login.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -57,11 +58,14 @@ export class AuthController {
     return new HttpException('user registered succusss !', HttpStatus.ACCEPTED);
   }
   // LOGIN METHOD
-  @Post('/login/test')
-  async login(@Body() Body) {
-    console.log(Body);
-    // let { code } = req.body;
-    const response = this.authService.login(Body.id);
-    return response;
+  @Post('/login')
+  async login(@Body() loginDto: LoginDto) {
+    const user = await this.userService.findOne(loginDto.mobile);
+    if (!user) {
+      throw new HttpException(
+        "your mobile number doesn't exist",
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 }
