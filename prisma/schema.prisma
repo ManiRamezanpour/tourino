@@ -28,9 +28,8 @@ model User {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now()) @updatedAt
   team            Team?
-  Clients         Clients?
-  groups          groups?
   Payments        Payments?
+  groupsId        Int?
 
   @@map("user")
 }
@@ -47,9 +46,7 @@ model Team {
 }
 
 model Clients {
-  id             Int      @id @default(autoincrement())
-  user           User     @relation(fields: [userId], references: [id])
-  userId         Int      @unique
+  id             Int       @id @default(autoincrement())
   company_name   String
   company_logo   String
   province       String
@@ -63,29 +60,40 @@ model Clients {
   cto_birthday   String
   cto_fatherName String
   cto_phone      String
-  email          String   @unique
+  email          String    @unique
+  username       String
   password       String
+  Packages       Packages? @relation(fields: [packagesId], references: [id])
+  packagesId     Int?
+  Groups         Groups[]
 }
 
 model Payments {
-  id        Int      @id @default(autoincrement())
-  value     String
-  status    String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  packege   Packages @relation(fields: [packageId], references: [id])
-  packageId Int      @unique
+  id     Int    @id @default(autoincrement())
+  value  String
+  status String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int    @unique
 }
 
 model Packages {
-  id       Int       @id @default(autoincrement())
-  Payments Payments?
+  id             Int       @id @default(autoincrement())
+  name           String
+  price          String
+  expirationTime String
+  Clients        Clients[]
 }
 
-model groups {
-  id       Int  @id @default(autoincrement())
-  client   User @relation(fields: [clientId], references: [id])
-  clientId Int  @unique
+model Groups {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String
+  status      GroupStatus @default(ACTIVE)
+  image       String
+  groupCodes  String      @unique
+  clients     Clients     @relation(fields: [clientsId], references: [id])
+  clientsId   Int
+  createdAt   DateTime    @default(now())
 }
 
 // Controll roles
@@ -93,4 +101,9 @@ enum Role {
   CLIENT
   ADMIN
   USER
+}
+
+enum GroupStatus {
+  ACTIVE
+  NOTACTIVE
 }

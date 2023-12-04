@@ -2,33 +2,34 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JwtService } from '@nestjs/jwt';
+import { PackagesModule } from 'src/admin/packages/packages.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { GroupsModule } from 'src/groups/groups.module';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersController } from 'src/users/users.controller';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
+import { ClientModule } from '../client/client.module';
 import { AppController } from '../controllers/app.controller';
+import { PaymentModule } from '../payment/payment.module';
 import { AppService } from '../providers/app.service';
-import { ClientService } from '../client/client.service';
-import {ClientController} from "../client/client.controller";
-import {ClientModule} from "../client/client.module";
-import {PaymentModule} from "../payment/payment.module";
 
 @Module({
   imports: [
     DevtoolsModule.register({
-      http: process.env.NODE_ENV !== 'production',
+      http: process.env.APP_MODE !== 'PRODUCTION',
     }),
-    UsersModule,
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-      ClientModule,
-      PaymentModule
+    UsersModule,
+    AuthModule,
+    ClientModule,
+    PaymentModule,
+    PackagesModule,
+    GroupsModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController],
   providers: [AppService, PrismaService, UsersService, AuthGuard, JwtService],
 })
 export class AppModule {}
