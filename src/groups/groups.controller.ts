@@ -1,4 +1,10 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { GroupsService } from './groups.service';
 
@@ -12,13 +18,11 @@ export class GroupsController {
     return this.groupsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupsService.findOne(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupsService.remove(+id);
+  @Get(':groupCodes')
+  async findByGroupCodes(@Param('groupCodes') groupCodes: string) {
+    const group = await this.groupsService.findByGroupCodes(groupCodes);
+    if (!group)
+      throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
+    throw new HttpException({ data: group }, HttpStatus.OK);
   }
 }

@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   fullname        String
-  mobile          Int       @unique
+  mobile          Int          @unique
   gender          String
   nationalCode    String
   birthday        String
@@ -24,12 +24,13 @@ model User {
   specialIllness  String
   emergencyMobile String
   otp             String
-  role            Role      @default(USER)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now()) @updatedAt
+  role            Role         @default(USER)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now()) @updatedAt
   team            Team?
   Payments        Payments?
   groupsId        Int?
+  UserGroups      UserGroups[]
 
   @@map("user")
 }
@@ -85,15 +86,25 @@ model Packages {
 }
 
 model Groups {
-  id          Int         @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   name        String
   description String
-  status      GroupStatus @default(ACTIVE)
+  status      GroupStatus  @default(ACTIVE)
   image       String
-  groupCodes  String      @unique
-  client      Clients     @relation(fields: [clientId], references: [id])
+  groupCodes  String       @unique
+  client      Clients      @relation(fields: [clientId], references: [id])
   clientId    Int
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime     @default(now())
+  UserGroups  UserGroups[]
+}
+
+model UserGroups {
+  id        Int      @id @default(autoincrement())
+  groups    Groups   @relation(fields: [groupsId], references: [id])
+  groupsId  Int
+  users     User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
 }
 
 // Controll roles

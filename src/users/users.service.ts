@@ -11,18 +11,18 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findOne(mobile: number): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { mobile } });
+    const user = await this.prisma.user.findFirst({ where: { mobile } });
     console.log(user);
     return user;
   }
   async findOneById(id: number): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findFirst({ where: { id } });
     console.log(user);
     return user;
   }
   async createUser(dto: userRegisterDto): Promise<any> {
     const checkUser = await this.prisma.user.findFirst({
-      where: { mobile: dto.mobile },
+      where: { mobile: Number(dto.mobile) },
     });
     console.log(checkUser);
     if (checkUser) {
@@ -61,14 +61,14 @@ export class UsersService {
   }
   async getListOfMyTeam(id: number) {
     const team = await this.prisma.team.findMany({ where: { userId: id } });
-    console.log(team);
     return team;
   }
-  async addnewTeam(id: number, data) {
+  async addnewTeam(id: number, data: any) {
     data.userId = id;
     const team = await this.prisma.team.create({ data });
-    if (team)
+    if (team) {
       throw new HttpException('team created succuss !', HttpStatus.CREATED);
+    }
     throw new HttpException('message', HttpStatus.BAD_REQUEST);
   }
 }
