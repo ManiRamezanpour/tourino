@@ -15,6 +15,11 @@ export class UsersService {
     console.log(user);
     return user;
   }
+  async findOneById(id: number): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    console.log(user);
+    return user;
+  }
   async createUser(dto: userRegisterDto): Promise<any> {
     const checkUser = await this.prisma.user.findFirst({
       where: { mobile: dto.mobile },

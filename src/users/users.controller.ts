@@ -8,24 +8,23 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 @ApiTags('USER')
-@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   // get user profile
+  @ApiBearerAuth('access-token') //edit here
   @Get('/profile/:id')
   getProfile(@Param('id') id: number): Promise<any | User> {
-    const user = this.usersService.findOne(+id);
+    const user = this.usersService.findOneById(+id);
+    console.log(user);
     return user;
   }
   // update user profile

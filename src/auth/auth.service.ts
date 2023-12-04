@@ -1,7 +1,7 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { FirstRegister, IPayload } from 'src/common/types/Types';
+import { FirstRegister } from 'src/common/types/Types';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { codeGenerator } from 'src/utils/RandomCode';
@@ -26,16 +26,15 @@ export class AuthService {
     return otp == UserCode ? true : false;
   }
 
-  async login(id: number) {
-    const user = await this.userService.findOne(+id);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    const payload: IPayload = {
-      sub: user.id,
-      fullname: user.fullname,
-      mobile: user.mobile,
-      role: user.role,
+  async login(mobile: number) {
+    const { fullname, role, id } = await this.userService.findOne(mobile);
+    const payload: { sub: any; user: { role: any; fullname: any; id: any } } = {
+      sub: id,
+      user: {
+        role,
+        fullname,
+        id,
+      },
     };
     return {
       Token: this.jwtService.sign(payload),
