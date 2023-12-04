@@ -91,8 +91,8 @@ model Groups {
   status      GroupStatus @default(ACTIVE)
   image       String
   groupCodes  String      @unique
-  clients     Clients     @relation(fields: [clientsId], references: [id])
-  clientsId   Int
+  client      Clients     @relation(fields: [clientId], references: [id])
+  clientId    Int
   createdAt   DateTime    @default(now())
 }
 

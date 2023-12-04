@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class GroupsService {
   constructor(private readonly prisma: PrismaService) {}
   async create(groupCodes: string, id: number) {
-    const data: Prisma.GroupsCreateInput = {
+    console.log(id);
+    const data = {
       name: '',
       description: '',
       groupCodes,
-      clientsId: id,
+      clientId: id,
       image: '',
     };
     return await this.prisma.groups.create({ data });

@@ -13,7 +13,6 @@ export class ClientService {
   async create(createClientDto: CreateClientDto) {
     const data = {
       packagesId: +createClientDto.PackageId,
-      userId: 1,
       company_name: createClientDto.company_name,
       company_logo: '',
       province: createClientDto.province,
@@ -34,7 +33,7 @@ export class ClientService {
     const { groupCode } = createClientDto;
     const client = await this.prisma.clients.create({ data: data });
     console.log(client.id);
-    await this.groupService.create(groupCode, client.id);
+    return await this.groupService.create(groupCode, client.id);
   }
   async completeProfile(id: number) {
     const compeletion = {
