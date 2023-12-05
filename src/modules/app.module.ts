@@ -4,7 +4,7 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JwtService } from '@nestjs/jwt';
 import { PackagesModule } from 'src/admin/packages/packages.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { AuthGuard } from 'src/guard/auht.guard';
 import { GroupsModule } from 'src/groups/groups.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersModule } from 'src/users/users.module';

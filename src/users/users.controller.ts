@@ -7,7 +7,7 @@ import {
   Param,
   Post,
   Put,
-  Req,
+  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -17,6 +17,8 @@ import { authGuard } from 'src/guard/auht.guard';
 import CheckRoleGuard from 'src/guard/check-roles.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Controller('users')
 @ApiTags('USER')
@@ -33,14 +35,14 @@ export class UsersController {
   @Get('/profile/:id')
   getProfile(@Param('id') id: number): Promise<any | User> {
     const user = this.usersService.findById(+id);
-    console.log(user);
     return user;
   }
   // UPDATE USER PROFILE
   @Put('/profile/update/:id')
-  updateProfile(@Req() req, @Param('id') id: number) {
-    const { body } = req;
-    this.usersService.updateUserProfile(+id, body);
+  async updateProfile(@Body() data, @Param('id') id: number) {
+    console.log(data);
+    const update = await this.usersService.updateUserProfile(+id, data);
+    console.log(update);
   }
   // ADD TEAM
   @ApiTags('TEAM')
@@ -66,8 +68,6 @@ export class UsersController {
   @Get('/group/:id')
   async getUserGroup(@Param('id') id: number) {
     const usersGroup = await this.group.findByUserId(+id);
-    console.log(usersGroup);
-    console.log(usersGroup);
     if (!usersGroup || (await usersGroup).length === 0)
       throw new HttpException(
         'not groups found for this users !',
@@ -86,5 +86,12 @@ export class UsersController {
       );
     }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
+  }
+  @ApiTags('User group')
+  @Get('/upload')
+  async getFile(): Promise<StreamableFile> {
+    const file = createReadStream(join(process.cwd(), 'package.json'));
+    console.log(file);
+    return new StreamableFile(file);
   }
 }
