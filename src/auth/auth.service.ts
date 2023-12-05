@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { FirstRegister } from 'src/common/types/Types';
@@ -26,14 +26,24 @@ export class AuthService {
     return otp == UserCode ? true : false;
   }
 
-  async login(mobile: number) {
-    const { fullname, role, id } = await this.userService.findOne(mobile);
+  async login(data: { otp: string; mobile: number }) {
+    console.log(data);
+    const user = await this.userService.findOne(+data.mobile);
+    if (!user) {
+      throw new HttpException(
+        "your mobile number doesn't exist",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    if (user.otp != data.otp) {
+      return new HttpException('OTP is not valid !', HttpStatus.NOT_FOUND);
+    }
     const payload: { sub: any; user: { role: any; fullname: any; id: any } } = {
-      sub: id,
+      sub: user.id,
       user: {
-        role,
-        fullname,
-        id,
+        role: user.role,
+        fullname: user.fullname,
+        id: user.id,
       },
     };
     return {

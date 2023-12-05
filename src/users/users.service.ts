@@ -10,14 +10,14 @@ type userRegisterDto = {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(mobile: number): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({ where: { mobile } });
-    console.log(user);
+  async findOne(mobile: number) {
+    const user = await this.prisma.user.findFirst({
+      where: { mobile: +mobile },
+    });
     return user;
   }
-  async findOneById(id: number): Promise<User | null> {
+  async findById(id: number): Promise<User | null> {
     const user = await this.prisma.user.findFirst({ where: { id } });
-    console.log(user);
     return user;
   }
   async createUser(dto: userRegisterDto): Promise<any> {
@@ -56,8 +56,7 @@ export class UsersService {
     return user;
   }
   async updateUserProfile(id: number, data: any) {
-    const result = await this.prisma.user.update({ where: { id }, data });
-    console.log(result);
+    return await this.prisma.user.update({ where: { id }, data });
   }
   async getListOfMyTeam(id: number) {
     const team = await this.prisma.team.findMany({ where: { userId: id } });

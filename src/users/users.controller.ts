@@ -8,15 +8,21 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GroupsService } from 'src/groups/groups.service';
+import { authGuard } from 'src/guard/auht.guard';
+import CheckRoleGuard from 'src/guard/check-roles.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 @ApiTags('USER')
+@UseGuards(CheckRoleGuard(['USER']))
+@UseGuards(authGuard(false))
+@ApiBearerAuth()
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -24,10 +30,9 @@ export class UsersController {
   ) {}
 
   // GET USER PROFILE
-  @ApiBearerAuth('access-token') //edit here
   @Get('/profile/:id')
   getProfile(@Param('id') id: number): Promise<any | User> {
-    const user = this.usersService.findOneById(+id);
+    const user = this.usersService.findById(+id);
     console.log(user);
     return user;
   }
@@ -70,6 +75,7 @@ export class UsersController {
       );
     throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
   }
+  @ApiTags('User group')
   @Post('/group/:id')
   async createUserGroup(@Param('id') id: number, @Body() groupCodes: string) {
     const groups = await this.group.addUserGroup(groupCodes, +id);

@@ -51,13 +51,9 @@ export class AuthController {
   // LOGIN METHOD
   @Post('/login')
   async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.login(loginDto.mobile);
-    if (!user) {
-      throw new HttpException(
-        "your mobile number doesn't exist",
-        HttpStatus.FORBIDDEN,
-      );
-    }
-    return user;
+    return await this.authService.login({
+      mobile: loginDto.mobile,
+      otp: loginDto.otp,
+    });
   }
 }
