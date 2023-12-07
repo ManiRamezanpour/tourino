@@ -4,9 +4,10 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JwtService } from '@nestjs/jwt';
 import { PackagesModule } from 'src/admin/packages/packages.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { AuthGuard } from 'src/guard/auht.guard';
 import { GroupsModule } from 'src/groups/groups.module';
+import { AuthGuard } from 'src/guard/auht.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProgramModule } from 'src/program/program.module';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { ClientModule } from '../client/client.module';
@@ -28,6 +29,7 @@ import { AppService } from '../providers/app.service';
     PaymentModule,
     PackagesModule,
     GroupsModule,
+    ProgramModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, UsersService, AuthGuard, JwtService],
