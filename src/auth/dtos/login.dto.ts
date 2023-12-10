@@ -5,7 +5,7 @@ export class LoginDto {
     example: 32321312,
     required: true,
   })
-  mobile: number;
+  mobile: string;
   @ApiProperty({
     example: '1233',
     required: true,

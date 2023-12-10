@@ -39,9 +39,7 @@ export class ProgramController {
   @UseGuards(authGuard(false))
   @Get(':groupId')
   async findWithGroupId(@Param('groupId') groupId: number) {
-    console.log(groupId);
     const program = await this.programService.findByGroupId(groupId);
-    console.log(groupId);
     if (program.length === 0) {
       throw new HttpException(
         'not programs found for this groups!',

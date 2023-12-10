@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 type userRegisterDto = {
-  mobile: number;
+  mobile: string;
   fullname: string;
   otp: string;
 };
@@ -10,9 +10,9 @@ type userRegisterDto = {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(mobile: number) {
+  async findOne(mobile: string) {
     const user = await this.prisma.user.findFirst({
-      where: { mobile: +mobile },
+      where: { mobile: mobile },
     });
     return user;
   }
@@ -20,9 +20,11 @@ export class UsersService {
     const user = await this.prisma.user.findFirst({ where: { id } });
     return user;
   }
-  async createUser(dto: userRegisterDto): Promise<any> {
+  async createUser(dto: userRegisterDto) {
+    console.log(typeof dto.mobile);
+
     const checkUser = await this.prisma.user.findFirst({
-      where: { mobile: Number(dto.mobile) },
+      where: { mobile: dto.mobile },
     });
     console.log(checkUser);
     if (checkUser) {
@@ -33,7 +35,7 @@ export class UsersService {
     }
     const data = {
       fullname: dto.fullname,
-      mobile: Number(dto.mobile),
+      mobile: dto.mobile,
       otp: dto.otp,
       gender: '',
       nationalCode: '',

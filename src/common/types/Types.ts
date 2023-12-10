@@ -1,5 +1,5 @@
 export type FirstRegister = {
-  mobile: number;
+  mobile: string;
   fullname: string;
 };
 export type IPayload = {

@@ -43,7 +43,13 @@ export class UsersController {
     console.log(data);
     const update = await this.usersService.updateUserProfile(+id, data);
     console.log(update);
-    return update;
+    throw new HttpException(
+      {
+        data: update,
+        message: 'user profile was compoleted !',
+      },
+      HttpStatus.ACCEPTED,
+    );
   }
   // ADD TEAM
   @ApiTags('TEAM')
@@ -64,18 +70,18 @@ export class UsersController {
   }
 
   //! USER GROUP
-  @ApiTags('User group')
-  @ApiBearerAuth('access-token') //edit here
-  @Get('/group/:id')
-  async getUserGroup(@Param('id') id: number) {
-    const usersGroup = await this.group.findByUserId(+id);
-    if (!usersGroup || (await usersGroup).length === 0)
-      throw new HttpException(
-        'not groups found for this users !',
-        HttpStatus.NOT_FOUND,
-      );
-    throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
-  }
+  // @ApiTags('User group')
+  // @ApiBearerAuth('access-token') //edit here
+  // @Get('/group/:id')
+  // async getUserGroup(@Param('id') id: number) {
+  //   const usersGroup = await this.group.findByUserId(+id);
+  //   if (!usersGroup || (await usersGroup).length === 0)
+  //     throw new HttpException(
+  //       'not groups found for this users !',
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
+  // }
   @ApiTags('User group')
   @Post('/group/:id')
   async createUserGroup(@Param('id') id: number, @Body() groupCodes: string) {
@@ -88,6 +94,7 @@ export class UsersController {
     }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
+
   @ApiTags('User group')
   @Get('/upload')
   async getFile(): Promise<StreamableFile> {

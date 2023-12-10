@@ -26,9 +26,9 @@ export class AuthService {
     return otp == UserCode ? true : false;
   }
 
-  async login(data: { otp: string; mobile: number }) {
+  async login(data: { otp: string; mobile: string }) {
     console.log(data);
-    const user = await this.userService.findOne(+data.mobile);
+    const user = await this.userService.findOne(data.mobile);
     if (!user) {
       throw new HttpException(
         "your mobile number doesn't exist",
@@ -41,13 +41,14 @@ export class AuthService {
     const payload: { sub: any; user: { role: any; fullname: any; id: any } } = {
       sub: user.id,
       user: {
-        role: user.role,
+        role: 'USER',
         fullname: user.fullname,
         id: user.id,
       },
     };
     return {
       Token: this.jwtService.sign(payload),
+      message: 'Verification is compeleted !',
     };
   }
 }

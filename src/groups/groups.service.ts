@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class GroupsService {
   constructor(private readonly prisma: PrismaService) {}
+  // create a new group
   async create(groupCodes: string, id: number) {
     console.log(id);
     const data = {
@@ -16,14 +17,16 @@ export class GroupsService {
     return await this.prisma.groups.create({ data });
   }
 
+  // get all groups
   async findAll() {
     return await this.prisma.groups.findMany();
     return `This action returns all groups`;
   }
 
-  async findByUserId(userId: number) {
-    return await this.prisma.userGroups.findMany({ where: { userId: userId } });
-  }
+  // async findByUserId(userId: number) {
+  //     const users = await this.prisma.user.findFirst
+  //   // return await this.prisma.userGroups.findMany({ where: { userId: userId } });
+  // }
   async findByGroupCodes(groupCodes: string) {
     return await this.prisma.groups.findFirst({ where: { groupCodes } });
   }
@@ -32,15 +35,15 @@ export class GroupsService {
   }
   async addUserGroup(groupCodes: string, userId: number) {
     const group = await this.prisma.groups.findFirst({
-      where: { groupCodes: '2312312' },
+      where: { groupCodes },
     });
     if (!group) {
       throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
     }
-    return await this.prisma.userGroups.create({
+    return await this.prisma.user.update({
+      where: { id: userId },
       data: {
-        userId,
-        groupsId: group.id,
+        groups: group,
       },
     });
   }

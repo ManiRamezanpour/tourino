@@ -29,6 +29,7 @@ export class AuthController {
     console.log(createUserDto);
     const { mobile, fullname } = createUserDto;
     const otp: string = codeGenerator(6);
+    console.log(otp);
     return await this.userService.createUser({ mobile, fullname, otp });
   }
   // CHECK OTP METHOD IS VALID
