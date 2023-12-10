@@ -20,7 +20,7 @@ async function bootstrap() {
     ? `http://127.0.0.1:${port}`
     : await app.getUrl();
   console.log(appUrl);
-  isDevelopmentMode &&
-    console.log(`RestApi: http://localhost:${port}${DOCUMENT_ROUTE}`);
+  isDevelopmentMode && console.log('DB IS CONNECTED !');
+  console.log(`RestApi: http://localhost:${port}${DOCUMENT_ROUTE}`);
 }
 bootstrap();

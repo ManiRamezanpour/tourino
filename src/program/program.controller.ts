@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -39,7 +38,8 @@ export class ProgramController {
   @UseGuards(CheckRoleGuard(['CLIENT', 'USER', 'ADMIN']))
   @UseGuards(authGuard(false))
   @Get(':groupId')
-  async findWithGroupId(@Param('groupId') groupId: number, @Query() query) {
+  async findWithGroupId(@Param('groupId') groupId: number) {
+    console.log(groupId);
     const program = await this.programService.findByGroupId(groupId);
     console.log(groupId);
     if (program.length === 0) {
@@ -57,13 +57,13 @@ export class ProgramController {
   async findOne(@Param('id') id: string) {
     return this.programService.findOne(+id);
   }
-
   @UseGuards(CheckRoleGuard(['CLIENT', 'ADMIN']))
   @UseGuards(authGuard(false))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProgramDto: UpdateProgramDto) {
     return this.programService.update(+id, updateProgramDto);
   }
+  // delete program from database
   @UseGuards(CheckRoleGuard(['CLIENT', 'ADMIN']))
   @UseGuards(authGuard(false))
   @Delete(':id')

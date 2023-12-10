@@ -12,13 +12,13 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { GroupsService } from 'src/groups/groups.service';
 import { authGuard } from 'src/guard/auht.guard';
 import CheckRoleGuard from 'src/guard/check-roles.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 
 @Controller('users')
 @ApiTags('USER')
@@ -43,6 +43,7 @@ export class UsersController {
     console.log(data);
     const update = await this.usersService.updateUserProfile(+id, data);
     console.log(update);
+    return update;
   }
   // ADD TEAM
   @ApiTags('TEAM')

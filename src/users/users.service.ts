@@ -55,7 +55,7 @@ export class UsersService {
     const user = this.prisma.user.findFirst({ where: { id } });
     return user;
   }
-  async updateUserProfile(id: number, data: any) {
+  async updateUserProfile(id: number, data: User) {
     return await this.prisma.user.update({ where: { id }, data });
   }
   async getListOfMyTeam(id: number) {
