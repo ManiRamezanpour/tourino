@@ -69,26 +69,31 @@ export class UsersController {
     await this.usersService.addnewTeam(+id, createTeamDto);
   }
 
-  //! USER GROUP
-  // @ApiTags('User group')
-  // @ApiBearerAuth('access-token') //edit here
-  // @Get('/group/:id')
-  // async getUserGroup(@Param('id') id: number) {
-  //   const usersGroup = await this.group.findByUserId(+id);
-  //   if (!usersGroup || (await usersGroup).length === 0)
-  //     throw new HttpException(
-  //       'not groups found for this users !',
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
-  // }
+  // GET USER GROUPS
   @ApiTags('User group')
-  @Post('/group/:id')
-  async createUserGroup(@Param('id') id: number, @Body() groupCodes: string) {
-    const groups = await this.group.addUserGroup(groupCodes, +id);
+  @Get('/group/:userId')
+  async getUserGroup(@Param('id') id: number) {
+    const user = await this.group.findByUserId(+id);
+    const userGroups = user.Groups;
+    console.log(userGroups);
+    if (!user)
+      throw new HttpException(
+        'not groups found for this users !',
+        HttpStatus.NOT_FOUND,
+      );
+    // throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
+  }
+
+  @ApiTags('User group')
+  @Post('/group/:userId')
+  async addUserGroups(@Param('userId') id: number, @Body() body) {
+    const groups = await this.group.addUserGroup(body.groupCodes, +id);
     if (groups) {
       throw new HttpException(
-        'user addded to group succuss',
+        {
+          data: groups,
+          message: 'user addded to group succuss',
+        },
         HttpStatus.ACCEPTED,
       );
     }

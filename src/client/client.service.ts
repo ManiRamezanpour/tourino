@@ -27,12 +27,11 @@ export class ClientService {
       cto_phone: createClientDto.cto_phone,
       cto_fatherName: '',
       username: '',
-      email: '',
-      password: '',
+      email: createClientDto.email,
+      password: createClientDto.password,
     };
     const { groupCode } = createClientDto;
     const client = await this.prisma.clients.create({ data: data });
-    console.log(client.id);
     return await this.groupService.create(groupCode, client.id);
   }
   async completeProfile(id: number) {

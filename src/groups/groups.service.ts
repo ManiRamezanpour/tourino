@@ -23,10 +23,9 @@ export class GroupsService {
     return `This action returns all groups`;
   }
 
-  // async findByUserId(userId: number) {
-  //     const users = await this.prisma.user.findFirst
-  //   // return await this.prisma.userGroups.findMany({ where: { userId: userId } });
-  // }
+  async findByUserId(userId: number) {
+    return await this.prisma.user.findFirst({ where: { id: userId } });
+  }
   async findByGroupCodes(groupCodes: string) {
     return await this.prisma.groups.findFirst({ where: { groupCodes } });
   }
@@ -34,18 +33,23 @@ export class GroupsService {
     return await this.prisma.groups.findFirst({ where: { id } });
   }
   async addUserGroup(groupCodes: string, userId: number) {
+    console.log(groupCodes);
     const group = await this.prisma.groups.findFirst({
       where: { groupCodes },
     });
     if (!group) {
       throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
     }
-    return await this.prisma.user.update({
+    const userOldGroup = await this.prisma.user.findFirst({
+      where: { id: userId },
+    });
+    const updateUserGroups = await this.prisma.user.update({
       where: { id: userId },
       data: {
-        groups: group,
+        Groups: [...userOldGroup.Groups, group.groupCodes],
       },
     });
+    return updateUserGroups;
   }
   // async checkUserInGroup(groupCodes: string, userId: number) {}
 }

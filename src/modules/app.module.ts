@@ -12,7 +12,6 @@ import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { ClientModule } from '../client/client.module';
 import { AppController } from '../controllers/app.controller';
-import { PaymentModule } from '../payment/payment.module';
 import { AppService } from '../providers/app.service';
 
 @Module({
@@ -26,7 +25,6 @@ import { AppService } from '../providers/app.service';
     UsersModule,
     AuthModule,
     ClientModule,
-    PaymentModule,
     PackagesModule,
     GroupsModule,
     ProgramModule,
