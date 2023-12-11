@@ -33,9 +33,13 @@ export class UsersController {
 
   // GET USER PROFILE
   @Get('/profile/:id')
-  getProfile(@Param('id') id: number): Promise<any | User> {
-    const user = this.usersService.findById(+id);
-    return user;
+  async getProfile(@Param('id') id: number): Promise<User | any> {
+    const user = await this.usersService.findById(+id);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    throw new HttpException({ data: user }, HttpStatus.FOUND);
   }
   // UPDATE USER PROFILE
   @Put('/profile/update/:id')
@@ -60,6 +64,7 @@ export class UsersController {
 
     return new HttpException({ data: myTeam }, HttpStatus.FOUND);
   }
+  // GET TEAM LIST
   @ApiTags('TEAM')
   @Post('/team/:id')
   async addNewTeam(
@@ -72,18 +77,21 @@ export class UsersController {
   // GET USER GROUPS
   @ApiTags('User group')
   @Get('/group/:userId')
-  async getUserGroup(@Param('id') id: number) {
-    const user = await this.group.findByUserId(+id);
-    const userGroups = user.Groups;
-    console.log(userGroups);
-    if (!user)
+  async getUserGroup(@Param('userId') id: number) {
+    const user = await this.usersService.findById(+id);
+    const userGroupsArray = user.Groups;
+    if (userGroupsArray.length == 0) {
       throw new HttpException(
-        'not groups found for this users !',
+        { message: 'groups not found for this usere' },
         HttpStatus.NOT_FOUND,
       );
-    // throw new HttpException({ data: usersGroup }, HttpStatus.FOUND);
+    }
+    throw new HttpException(
+      { message: 'users group founded !', data: userGroupsArray },
+      HttpStatus.FOUND,
+    );
   }
-
+  // ADD USER TO GROUP
   @ApiTags('User group')
   @Post('/group/:userId')
   async addUserGroups(@Param('userId') id: number, @Body() body) {

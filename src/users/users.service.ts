@@ -17,7 +17,9 @@ export class UsersService {
     return user;
   }
   async findById(id: number): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({ where: { id } });
+    const user = await this.prisma.user.findFirst({
+      where: { id },
+    });
     return user;
   }
   async createUser(dto: userRegisterDto) {
