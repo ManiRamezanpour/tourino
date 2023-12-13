@@ -6,8 +6,15 @@ import { AppModule } from './modules/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     snapshot: true,
+    cors: true,
   });
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*',
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
+
   configDotenv();
   const port = process.env.PORT || 3000;
 

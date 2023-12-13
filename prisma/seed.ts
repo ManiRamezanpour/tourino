@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
+// generate code for group
 function groupCodes(): string {
   const digits: string = '0123456789';
   let code: string = '';
@@ -17,17 +18,17 @@ async function main() {
   await prisma.packages.createMany({
     data: [
       {
-        name: 'golden',
+        name: 'طلایی',
         price: '1000$',
         expirationTime: '1month',
       },
       {
-        name: 'bronze',
+        name: 'برنزی',
         price: '800$',
         expirationTime: '1month',
       },
       {
-        name: 'thirds',
+        name: 'نقره ایی',
         price: '500$',
         expirationTime: '1month',
       },
@@ -71,7 +72,7 @@ async function main() {
         cto_phone: '09331231243',
         email: 'al342ei@gmail.com',
         username: 'alireza',
-        password: 'manirmp1386',
+        password: 'manirmp13 ی86',
         packagesId: 1,
       },
     ],
