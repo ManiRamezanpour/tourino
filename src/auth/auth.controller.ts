@@ -9,7 +9,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { codeGenerator } from 'src/utils/RandomCode';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dtos/login.dto';
 import { OTPValidationDto } from './dtos/otp-validation.dto';
@@ -28,7 +27,8 @@ export class AuthController {
   async register(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
     const { mobile, fullname } = createUserDto;
-    const otp: string = codeGenerator(6);
+    // const otp: string = codeGenerator(6);
+    const otp = '1234';
     console.log(otp);
     return await this.userService.createUser({ mobile, fullname, otp });
   }

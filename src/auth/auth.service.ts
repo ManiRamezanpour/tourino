@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import { FirstRegister } from 'src/common/types/Types';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
@@ -13,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser({ mobile }: FirstRegister): Promise<any | User> {
+  async validateUser({ mobile }: FirstRegister): Promise<any> {
     const user = await this.userService.findOne(mobile);
     if (user) {
       const { ...result } = user;
