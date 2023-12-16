@@ -10,21 +10,17 @@ import {
   StreamableFile,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { GroupsService } from 'src/groups/groups.service';
 import { authGuard } from 'src/guard/auht.guard';
-import CheckRoleGuard from 'src/guard/check-roles.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 @ApiTags('USER')
-@UseGuards(CheckRoleGuard(['USER']))
-@UseGuards(authGuard(false))
-@ApiBearerAuth()
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -32,10 +28,10 @@ export class UsersController {
   ) {}
 
   // GET USER PROFILE
+  @UseGuards(authGuard(false))
   @Get('/profile/:id')
   async getProfile(@Param('id') id: number): Promise<User | any> {
     const user = await this.usersService.findById(+id);
-
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
@@ -76,7 +72,7 @@ export class UsersController {
 
   // GET USER GROUPS
   @ApiTags('User group')
-  @Get('/group/:userId')
+  @Get('/group/')
   async getUserGroup(@Param('userId') id: number) {
     const user = await this.usersService.findById(+id);
     const userGroupsArray = user.Groups;
@@ -107,7 +103,6 @@ export class UsersController {
     }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
-
   @ApiTags('User group')
   @Get('/upload')
   async getFile(): Promise<StreamableFile> {

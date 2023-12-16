@@ -23,25 +23,27 @@ model User {
   bloodCategory   String
   specialIllness  String
   emergencyMobile String
-  otp             String
-  role            Role     @default(USER)
+  otp             String   @default("12345")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
-  team            Team?
   Groups          String[]
+  Team            Team[]
 
   @@map("user")
 }
 
 model Team {
   id            Int    @id @default(autoincrement())
-  user          User   @relation(fields: [userId], references: [id])
-  userId        Int    @unique
+  user          User?  @relation(fields: [userId], references: [id])
+  userId        Int
   fullname      String
   natinalCode   String
   image         String
   fatherName    String
   bloodCategory String
+
+  @@index([userId])
+  @@map("users")
 }
 
 model Clients {
@@ -93,8 +95,6 @@ model Groups {
   clientId    Int
   createdAt   DateTime    @default(now())
   Program     Program[]
-  // User        User?       @relation(fields: [userId], references: [id])
-  // userId      Int?
 }
 
 model Program {
@@ -103,7 +103,7 @@ model Program {
   groups      Groups      @relation(fields: [groupsId], references: [id])
   groupsId    Int
   status      GroupStatus
-  time        DateTime
+  time        String
   departure   String
   destination String
   price       String

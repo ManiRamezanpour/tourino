@@ -33,7 +33,7 @@ export class AuthController {
     return await this.userService.createUser({ mobile, fullname, otp });
   }
   // CHECK OTP METHOD IS VALID
-  @Post('/otp/verify')
+  @Post('/otp/verify:/id')
   async otp(@Body() otpvlaidationdto: OTPValidationDto) {
     const user = await this.userService.findOne(otpvlaidationdto.mobile);
     console.log(user);

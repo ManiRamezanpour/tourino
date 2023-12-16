@@ -11,7 +11,14 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
   ) {}
-
+  async validateUserByTokenPayload(id: number) {
+    const user = await this.prisma.user.findFirst({ where: { id } });
+    if (user) {
+      const { ...result } = user;
+      return result;
+    }
+    return null;
+  }
   async validateUser({ mobile }: FirstRegister): Promise<any> {
     const user = await this.userService.findOne(mobile);
     if (user) {

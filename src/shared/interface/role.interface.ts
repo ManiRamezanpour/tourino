@@ -1,4 +1,9 @@
-import { Role as _Role } from '@prisma/client';
+enum ROlE {
+  'ADMIN',
+  'CLINET',
+  'USER',
+}
 
-export type RoleType = _Role;
-export const Role = _Role;
+export interface Role {
+  role: ROlE;
+}
