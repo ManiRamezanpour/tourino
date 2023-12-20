@@ -40,12 +40,12 @@ export class ProgramController {
   @Get(':groupId')
   async findWithGroupId(@Param('groupId') groupId: number) {
     const program = await this.programService.findByGroupId(groupId);
-    if (program.length === 0) {
-      throw new HttpException(
-        'not programs found for this groups!',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    // if (program.length === 0) {
+    //   throw new HttpException(
+    //     'not programs found for this groups!',
+    //     HttpStatus.NOT_FOUND,
+    //   );
+    // }
     throw new HttpException({ data: program }, HttpStatus.FOUND);
   }
   // get single program for clients and uesres

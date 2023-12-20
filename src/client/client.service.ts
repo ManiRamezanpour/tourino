@@ -1,38 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { GroupsService } from 'src/groups/groups.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Stats } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hashPassword } from 'src/utils/Helpers';
 import { CreateClientDto } from './dto/create-client.dto';
 
 @Injectable()
 export class ClientService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly groupService: GroupsService,
-  ) {}
-  async create(createClientDto: CreateClientDto) {
-    const data = {
-      packagesId: +createClientDto.PackageId,
-      company_name: createClientDto.company_name,
+  constructor(readonly prisma: PrismaService) {}
+  async create(clientData: CreateClientDto, packageId: number) {
+    console.log(clientData);
+
+    const packages = await this.prisma.packages.findFirst({
+      where: { id: packageId },
+    });
+    if (!packages)
+      throw new HttpException('Package not found', HttpStatus.NOT_FOUND);
+    const db = {
+      packagesId: packageId,
+      company_name: clientData.company_name,
       company_logo: '',
-      province: createClientDto.province,
-      city: createClientDto.city,
+      province: clientData.province,
+      city: clientData.city,
       Address: '',
       Phones: '',
       Socials: [''],
       website: '',
-      cto_name: createClientDto.cto_name,
-      cto_nationCode: createClientDto.cto_nationCode,
+      cto_name: clientData.cto_name,
+      cto_nationCode: clientData.cto_nationCode,
       cto_birthday: '',
-      cto_phone: createClientDto.cto_phone,
+      cto_phone: clientData.cto_phone,
       cto_fatherName: '',
-      username: '',
-      email: createClientDto.email,
-      password: createClientDto.password,
+      accountStatus: Stats.NOTACTIVE,
+      email: clientData.email,
+      username: clientData.username,
+      password: clientData.password,
+      groupName: '',
+      description: '',
+      groupStatus: Stats.ACTIVE,
+      groupCodes: clientData.groupCode,
     };
-    const { groupCode } = createClientDto;
-    const client = await this.prisma.clients.create({ data: data });
-    return await this.groupService.create(groupCode, client.id);
+    const client = await this.prisma.clients.create({ data: db });
+    return client;
   }
   async completeProfile(id: number) {
     const compeletion = {

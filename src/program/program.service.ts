@@ -15,9 +15,12 @@ export class ProgramService {
     return await this.prisma.program.findMany();
   }
   async findByGroupId(groupsId: number) {
-    return await this.prisma.program.findMany({
-      where: { groupsId: Number(groupsId) },
-    });
+    console.log(groupsId);
+
+    // return await this.prisma.program.findMany({
+    // where: { groupsId: Number(groupsId) },
+    // });
+    return groupsId;
   }
   async findOne(id: number) {
     return await this.prisma.program.findFirst({ where: { id } });

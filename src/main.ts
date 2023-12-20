@@ -8,13 +8,13 @@ async function bootstrap() {
     snapshot: true,
     cors: true,
   });
-  app.enableCors({
-    allowedHeaders: '*',
-    origin: '*',
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  });
 
+  // app.enableCors({
+  //   allowedHeaders: '*',
+  //   origin: '*',
+  //   credentials: true,
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  // });
   configDotenv();
   const port = process.env.PORT || 3000;
 

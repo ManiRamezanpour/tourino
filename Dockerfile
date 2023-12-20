@@ -1,23 +1,29 @@
-FROM node:20.8.0
-# Create app directory
-WORKDIR /app
+FROM node:16-alpine as builder
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+ENV NODE_ENV build
+
+USER node
+WORKDIR /home/node
+
 COPY package*.json ./
-COPY prisma ./prisma/
-# Install app dependencies
-RUN npm install
-# RUN npx prisma migrate dev --name="init"
-COPY . .
+RUN npm ci
 
-# RUN npm run start:prod
+COPY --chown=node:node . .
+RUN npm run build \
+    && npm prune --production
 
-# FROM node:20.8.0
+# ---
 
-# COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/package*.json ./
-# COPY --from=builder /app/dist ./dist
+FROM node:16-alpine
 
-EXPOSE 3000
-CMD [ "npm", "run", "start:dev" ] 
-# CMD [ "npm", "run","start:prod"]
+ENV NODE_ENV production
+
+USER node
+WORKDIR /home/node
+
+COPY --from=builder --chown=node:node /home/node/package*.json ./
+# COPY --from=builder --chown=node:node /home/node/yarn.lock ./
+COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
+COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+
+CMD ["node", "dist/main.js"]

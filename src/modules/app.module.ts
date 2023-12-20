@@ -4,7 +4,6 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JwtService } from '@nestjs/jwt';
 import { PackagesModule } from 'src/admin/packages/packages.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { GroupsModule } from 'src/groups/groups.module';
 import { AuthGuard } from 'src/guard/auht.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProgramModule } from 'src/program/program.module';
@@ -26,7 +25,6 @@ import { AppService } from '../providers/app.service';
     AuthModule,
     ClientModule,
     PackagesModule,
-    GroupsModule,
     ProgramModule,
   ],
   controllers: [AppController],

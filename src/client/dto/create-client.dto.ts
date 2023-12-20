@@ -5,7 +5,7 @@ export class CreateClientDto {
     example: '1',
     required: true,
   })
-  PackageId: number;
+  packagesId: number;
 
   @ApiProperty({
     example: 'ALIBABA',
@@ -48,7 +48,11 @@ export class CreateClientDto {
     required: true,
   })
   email: string;
-
+  @ApiProperty({
+    example: 'manirmp',
+    required: true,
+  })
+  username: string;
   @ApiProperty({
     example: '*******',
     required: true,

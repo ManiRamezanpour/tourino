@@ -14,7 +14,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { createReadStream } from 'fs';
 import { join } from 'path';
-import { GroupsService } from 'src/groups/groups.service';
 import { authGuard } from 'src/guard/auht.guard';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
@@ -24,7 +23,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly group: GroupsService,
   ) {}
 
   // GET USER PROFILE
@@ -91,16 +89,16 @@ export class UsersController {
   @ApiTags('User group')
   @Post('/group/:userId')
   async addUserGroups(@Param('userId') id: number, @Body() body) {
-    const groups = await this.group.addUserGroup(body.groupCodes, +id);
-    if (groups) {
-      throw new HttpException(
-        {
-          data: groups,
-          message: 'user addded to group succuss',
-        },
-        HttpStatus.ACCEPTED,
-      );
-    }
+    // const groups = await this.group.addUserGroup(body.groupCodes, +id);
+    // if (groups) {
+    //   throw new HttpException(
+    //     {
+    //       data: groups,
+    //       message: 'user addded to group succuss',
+    //     },
+    //     HttpStatus.ACCEPTED,
+    //   );
+    // }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
   @ApiTags('User group')
