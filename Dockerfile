@@ -1,22 +1,24 @@
-FROM docker.arvancloud.ir/node:20.8.0
+FROM node:alpine
 # Create app directory
 WORKDIR /app
+# COPY package.json and package-lock.json files
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Install app dependencies
-RUN npm install
+# generated prisma files
+COPY prisma ./prisma/
 
+# COPY ENV variable
+COPY .env ./
+
+# COPY tsconfig.json file
+COPY tsconfig.json ./
+
+# COPY
 COPY . .
+RUN npx prisma generate
 
-# RUN npm run build
-
-# FROM node:20.8.0
-
-# COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/package*.json ./
-# COPY --from=builder /app/dist ./dist
-
+# Run and expose the server on port 3000
 EXPOSE 3000
+# A command to start the server
 CMD [ "npm", "run", "start:dev" ]
