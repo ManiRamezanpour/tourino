@@ -34,7 +34,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: manirmp
-          password: Mr@2081356007
+          password: manirmp1386
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
