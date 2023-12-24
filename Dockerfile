@@ -1,29 +1,24 @@
-FROM node:16-alpine as builder
+FROM node:20 AS builder
+# Create app directory
+WORKDIR /app
 
-ENV NODE_ENV build
-
-USER node
-WORKDIR /home/node
-
-COPY package*.json ./
+COPY package*.json  ./
+# Install application dependencies
 RUN npm ci
+COPY . .
+# Run prisma generate
+RUN npx prisma generate
+# Copy migration data
+COPY prisma ./prisma/
+# build the application
+RUN npm run build
 
-COPY --chown=node:node . .
-RUN npm run build \
-    && npm prune --production
+FROM node:20
 
-# ---
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
 
-FROM node:16-alpine
 
-ENV NODE_ENV production
-
-USER node
-WORKDIR /home/node
-
-COPY --from=builder --chown=node:node /home/node/package*.json ./
-# COPY --from=builder --chown=node:node /home/node/yarn.lock ./
-COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
-COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
-
-CMD ["node", "dist/main.js"]
+EXPOSE 3000
+CMD [ "npm" , "run" , "start:prod" ]
