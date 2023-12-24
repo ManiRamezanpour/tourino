@@ -106,7 +106,6 @@ model News {
 enum Role {
   CLIENT
   ADMIN
-  USER
 }
 
 enum Stats {
