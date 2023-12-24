@@ -6,17 +6,31 @@ import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
+import { PackagesService } from '../admin/packages/packages.service';
+import { ClientService } from '../client/client.service';
 
 @Module({
   imports: [
     UsersModule,
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+      property: 'user',
+      session: false,
+    }),
     JwtModule.register({
       secret: process.env.JWT_SECRET_TOKEN,
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, UsersService, PrismaService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    UsersService,
+    PrismaService,
+    PackagesService,
+    ClientService,
+  ],
+  exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}

@@ -10,5 +10,5 @@ export class OTPValidationDto {
     example: '983133224',
     required: true,
   })
-  mobile: number;
+  mobile: string;
 }

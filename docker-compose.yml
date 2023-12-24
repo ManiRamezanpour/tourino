@@ -8,7 +8,9 @@ services:
       - 5555:5555
     depends_on:
       - postgres
-  postgres:
+    env_file:
+      - .env
+  postgres: 
     image: buildedpostgres
     container_name: postgres
     restart: always

@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  id: number;
-
   @ApiProperty({
     example: 'YOUR NAME',
     required: true,
@@ -13,5 +11,5 @@ export class CreateUserDto {
     example: '9831334324',
     required: true,
   })
-  mobile: number;
+  mobile: string;
 }

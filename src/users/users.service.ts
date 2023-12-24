@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 type userRegisterDto = {
-  mobile: number;
+  mobile: string;
   fullname: string;
   otp: string;
 };
@@ -10,12 +10,21 @@ type userRegisterDto = {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(mobile: number): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { mobile } });
-    console.log(user);
+  async findOne(mobile: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { mobile: mobile },
+    });
     return user;
   }
-  async createUser(dto: userRegisterDto): Promise<any> {
+  async findById(id: number): Promise<User | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { id },
+    });
+    return user;
+  }
+  async createUser(dto: userRegisterDto) {
+    console.log(typeof dto.mobile);
+
     const checkUser = await this.prisma.user.findFirst({
       where: { mobile: dto.mobile },
     });
@@ -28,7 +37,7 @@ export class UsersService {
     }
     const data = {
       fullname: dto.fullname,
-      mobile: Number(dto.mobile),
+      mobile: dto.mobile,
       otp: dto.otp,
       gender: '',
       nationalCode: '',
@@ -50,20 +59,19 @@ export class UsersService {
     const user = this.prisma.user.findFirst({ where: { id } });
     return user;
   }
-  async updateUserProfile(id: number, data: any) {
-    const result = await this.prisma.user.update({ where: { id }, data });
-    console.log(result);
+  async updateUserProfile(id: number, data: User) {
+    return await this.prisma.user.update({ where: { id }, data });
   }
   async getListOfMyTeam(id: number) {
     const team = await this.prisma.team.findMany({ where: { userId: id } });
-    console.log(team);
     return team;
   }
-  async addnewTeam(id: number, data) {
+  async addnewTeam(id: number, data: any) {
     data.userId = id;
     const team = await this.prisma.team.create({ data });
-    if (team)
+    if (team) {
       throw new HttpException('team created succuss !', HttpStatus.CREATED);
+    }
     throw new HttpException('message', HttpStatus.BAD_REQUEST);
   }
 }
