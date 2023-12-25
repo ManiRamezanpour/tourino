@@ -10,7 +10,6 @@ COPY . .
 RUN npx prisma generate
 # Copy migration data
 COPY prisma ./prisma/
-RUN npx prisma deploy
 # build the application
 RUN npm run build
 
