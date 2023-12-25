@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nest-api:
-    image: nest-api
+    image: manirmp/nest-api
     container_name: nest-api
     ports:
       - 3000:3000
@@ -11,9 +11,13 @@ services:
     env_file:
       - .env
   postgres:
-    image: postgres
+    image: docker.arvancloud.ir/postgres
     container_name: postgres
     restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: randompassword
+      POSTGRES_DB: tourino_db
     ports:
       - "5432:5432"
     volumes:
@@ -29,4 +33,3 @@ services:
       - "5050:5050"
 volumes:
   postgres:
-    name: db
