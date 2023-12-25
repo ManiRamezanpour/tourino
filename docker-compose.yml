@@ -33,4 +33,3 @@ services:
       - "5050:5050"
 volumes:
   postgres:
-    name: db
