@@ -9,9 +9,10 @@ COPY . .
 # Copy migration data
 
 # build the application
-RUN npm run build
 RUN npx prisma migrate deploy
 RUN npx prisma generate
+
+RUN npm run build
 FROM node:20
 
 COPY --from=builder /app/node_modules ./node_modules
