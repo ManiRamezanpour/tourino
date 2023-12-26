@@ -6,13 +6,12 @@ COPY package*.json  ./
 # Install application dependencies
 RUN npm ci
 COPY . .
-# Run prisma generate
-RUN npx prisma generate
 # Copy migration data
-COPY prisma ./prisma/
+
 # build the application
 RUN npm run build
-
+RUN npx prisma migrate deploy
+RUN npx prisma generate
 FROM node:20
 
 COPY --from=builder /app/node_modules ./node_modules
@@ -20,7 +19,6 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
-RUN npx prisma migrate deploy
 EXPOSE 3000
 CMD [ "npm" , "run" , "start:migrate:prod" ]
 
