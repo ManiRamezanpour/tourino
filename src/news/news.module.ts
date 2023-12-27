@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { NewsService } from './news.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { NewsController } from './news.controller';
+import { NewsService } from './news.service';
 
 @Module({
   controllers: [NewsController],
-  providers: [NewsService],
+  providers: [NewsService, PrismaService],
 })
 export class NewsModule {}

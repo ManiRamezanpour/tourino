@@ -74,4 +74,18 @@ export class UsersService {
     }
     throw new HttpException('message', HttpStatus.BAD_REQUEST);
   }
+  async addUserGroup(groupCode: string, userId: number) {
+    const group = this.prisma.clients.findFirst({
+      where: { groupCodes: groupCode },
+    });
+    if (!group)
+      throw new HttpException('Not group found !', HttpStatus.NOT_FOUND);
+    const currentUserGrpoups = this.prisma.user.findFirst({
+      where: { id: userId },
+    });
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { Groups: [...(await currentUserGrpoups).Groups, groupCode] },
+    });
+  }
 }

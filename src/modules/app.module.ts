@@ -12,6 +12,7 @@ import { UsersService } from 'src/users/users.service';
 import { ClientModule } from '../client/client.module';
 import { AppController } from '../controllers/app.controller';
 import { AppService } from '../providers/app.service';
+import { NewsModule } from "../news/news.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AppService } from '../providers/app.service';
     ClientModule,
     PackagesModule,
     ProgramModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, UsersService, AuthGuard, JwtService],
