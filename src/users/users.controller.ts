@@ -15,15 +15,15 @@ import { User } from '@prisma/client';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { authGuard } from 'src/guard/auht.guard';
+import { AddUserGroup } from './dto/add-user-group.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
 @ApiTags('USER')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
+  group: any;
+  constructor(private readonly usersService: UsersService) {}
 
   // GET USER PROFILE
   @UseGuards(authGuard(false))
@@ -88,17 +88,20 @@ export class UsersController {
   // ADD USER TO GROUP
   @ApiTags('User group')
   @Post('/group/:userId')
-  async addUserGroups(@Param('userId') id: number, @Body() body) {
-    // const groups = await this.group.addUserGroup(body.groupCodes, +id);
-    // if (groups) {
-    //   throw new HttpException(
-    //     {
-    //       data: groups,
-    //       message: 'user addded to group succuss',
-    //     },
-    //     HttpStatus.ACCEPTED,
-    //   );
-    // }
+  async addUserGroups(@Param('userId') id: number, @Body() add: AddUserGroup) {
+    const { groupCode } = add;
+    console.log(groupCode);
+    const groups = await this.usersService.addUserGroup(groupCode, +id);
+    console.log(groups);
+    if (groups) {
+      throw new HttpException(
+        {
+          data: groups,
+          message: 'user addded to group succuss',
+        },
+        HttpStatus.ACCEPTED,
+      );
+    }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
   @ApiTags('User group')
