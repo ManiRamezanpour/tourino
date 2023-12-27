@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Program } from '@prisma/client';
+import { Program, ProgramsRegisterationStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { UpdateProgramDto } from './dto/update-program.dto';
@@ -34,5 +34,23 @@ export class ProgramService {
 
   async remove(id: number) {
     return await this.prisma.program.delete({ where: { id } });
+  }
+
+  async userRegisterForProgram(
+    userId: number,
+    programId: number,
+    groupsCode: string,
+  ) {
+    return await this.prisma.programRegisters.create({
+      data: {
+        userId,
+        programId,
+        groupsCode,
+        status: ProgramsRegisterationStatus.NOTPAYED,
+      },
+    });
+  }
+  async findUserPrograms(userId: number) {
+    return await this.prisma.programRegisters.findMany({ where: { userId } });
   }
 }

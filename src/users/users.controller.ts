@@ -7,14 +7,12 @@ import {
   Param,
   Post,
   Put,
-  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 import { authGuard } from 'src/guard/auht.guard';
+import { ProgramService } from 'src/program/program.service';
 import { AddUserGroup } from './dto/add-user-group.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
@@ -23,7 +21,10 @@ import { UsersService } from './users.service';
 @ApiTags('USER')
 export class UsersController {
   group: any;
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private program: ProgramService,
+  ) {}
 
   // GET USER PROFILE
   @UseGuards(authGuard(false))
@@ -70,25 +71,27 @@ export class UsersController {
 
   // GET USER GROUPS
   @ApiTags('User group')
-  @Get('/group/')
-  async getUserGroup(@Param('userId') id: number) {
+  @Get('/group/:id')
+  async getUserGroup(@Param('id') id: number) {
     const user = await this.usersService.findById(+id);
-    const userGroupsArray = user.Groups;
-    if (userGroupsArray.length == 0) {
+    const { Groups } = user;
+    console.log(Groups);
+
+    if (Groups.length == 0) {
       throw new HttpException(
         { message: 'groups not found for this usere' },
         HttpStatus.NOT_FOUND,
       );
     }
     throw new HttpException(
-      { message: 'users group founded !', data: userGroupsArray },
+      { message: 'users group founded !', data: Groups },
       HttpStatus.FOUND,
     );
   }
   // ADD USER TO GROUP
   @ApiTags('User group')
-  @Post('/group/:userId')
-  async addUserGroups(@Param('userId') id: number, @Body() add: AddUserGroup) {
+  @Post('/group/:id')
+  async addUserGroups(@Param('id') id: number, @Body() add: AddUserGroup) {
     const { groupCode } = add;
     console.log(groupCode);
     const groups = await this.usersService.addUserGroup(groupCode, +id);
@@ -104,11 +107,29 @@ export class UsersController {
     }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
-  @ApiTags('User group')
-  @Get('/upload')
-  async getFile(): Promise<StreamableFile> {
-    const file = createReadStream(join(process.cwd(), 'package.json'));
-    console.log(file);
-    return new StreamableFile(file);
+  @ApiTags('User Programs')
+  @Post('/programs/:userId/:groupCode/:programId')
+  async registerUserPrograms(
+    @Param('userId') userId: number,
+    @Param('programId') programId: number,
+    @Param('groupCode') groupCode: string,
+  ) {
+    const create = await this.program.userRegisterForProgram(
+      +userId,
+      +programId,
+      groupCode,
+    );
+    if (!create)
+      throw new HttpException('Not registered !!!', HttpStatus.BAD_REQUEST);
+    throw new HttpException(
+      { message: 'registered was succussed !!!', data: create },
+      HttpStatus.ACCEPTED,
+    );
+  }
+  @ApiTags('User Programs')
+  @Get('/programs/:userId')
+  async getUserPrograms(@Param('userId') userId: number) {
+    const programs = await this.program.findUserPrograms(+userId);
+    throw new HttpException(programs, HttpStatus.FOUND);
   }
 }
