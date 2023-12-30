@@ -8,8 +8,6 @@ import { CreateClientDto } from './dto/create-client.dto';
 export class ClientService {
   constructor(readonly prisma: PrismaService) {}
   async create(clientData: CreateClientDto, packageId: number) {
-    console.log(clientData);
-
     const packages = await this.prisma.packages.findFirst({
       where: { id: packageId },
     });

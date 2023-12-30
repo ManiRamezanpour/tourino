@@ -13,6 +13,7 @@ import { AppService } from './app.service';
 import { ClientModule } from './client/client.module';
 import { AppController } from './controllers/app.controller';
 import { NewsModule } from './news/news.module';
+import { GadgetsModule } from './gadgets/gadgets.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NewsModule } from './news/news.module';
     PackagesModule,
     ProgramModule,
     NewsModule,
+    GadgetsModule,
   ],
   controllers: [AppController],
   providers: [

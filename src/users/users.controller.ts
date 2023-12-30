@@ -18,6 +18,7 @@ import { AddUserGroup } from './dto/add-user-group.dto';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UsersService } from './users.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 @ApiTags('USER')
 export class UsersController {
@@ -28,7 +29,6 @@ export class UsersController {
   ) {}
 
   // GET USER PROFILE
-  @UseGuards(JwtAuthGuard)
   @Get('/profile')
   async getProfile(@Request() req: any): Promise<User | any> {
     console.log(req);
@@ -94,16 +94,15 @@ export class UsersController {
   @Post('/group')
   async addUserGroups(@Request() req: any, @Body() add: AddUserGroup) {
     const id = parseInt(req.user.id);
-
     const { groupCode } = add;
     console.log(groupCode);
-    const groups = await this.usersService.addUserGroup(groupCode, +id);
-    console.log(groups);
+
+    const groups = await this.usersService.addUserGroup(groupCode, id);
     if (groups) {
       throw new HttpException(
         {
           data: groups,
-          message: 'user added to group succuss',
+          message: 'user added ot group succuss',
         },
         HttpStatus.ACCEPTED,
       );
@@ -113,11 +112,12 @@ export class UsersController {
   @ApiTags('User Programs')
   @Post('/programs/:groupCode/:programId')
   async registerUserPrograms(
-    @Request() req: any,
     @Param('programId') programId: number,
     @Param('groupCode') groupCode: string,
+    @Request() req: any,
   ) {
-    const userId = parseInt(req.user.id);
+    const userId = req.user.id;
+    console.log(userId);
     const create = await this.program.userRegisterForProgram(
       userId,
       +programId,
@@ -125,6 +125,7 @@ export class UsersController {
     );
     if (!create)
       throw new HttpException('Not registered !!!', HttpStatus.BAD_REQUEST);
+
     throw new HttpException(
       { message: 'registered was succuss !!!', data: create },
       HttpStatus.ACCEPTED,
