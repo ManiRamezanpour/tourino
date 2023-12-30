@@ -4,15 +4,16 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { JwtService } from '@nestjs/jwt';
 import { PackagesModule } from 'src/admin/packages/packages.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { AuthGuard } from 'src/guard/auht.guard';
+import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProgramModule } from 'src/program/program.module';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
-import { ClientModule } from '../client/client.module';
-import { AppController } from '../controllers/app.controller';
-import { AppService } from '../providers/app.service';
-import { NewsModule } from "../news/news.module";
+import { AppService } from './app.service';
+import { ClientModule } from './client/client.module';
+import { AppController } from './controllers/app.controller';
+import { NewsModule } from './news/news.module';
+import { GadgetsModule } from './gadgets/gadgets.module';
 
 @Module({
   imports: [
@@ -28,8 +29,15 @@ import { NewsModule } from "../news/news.module";
     PackagesModule,
     ProgramModule,
     NewsModule,
+    GadgetsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, UsersService, AuthGuard, JwtService],
+  providers: [
+    AppService,
+    PrismaService,
+    UsersService,
+    JwtAuthGuard,
+    JwtService,
+  ],
 })
 export class AppModule {}

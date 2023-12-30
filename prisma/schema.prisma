@@ -29,8 +29,6 @@ model User {
   Groups           String[]
   Team             Team[]
   ProgramRegisters ProgramRegisters[]
-
-  @@map("user")
 }
 
 model Team {
@@ -42,9 +40,6 @@ model Team {
   image         String
   fatherName    String
   bloodCategory String
-
-  @@index([userId])
-  @@map("users")
 }
 
 model Clients {
@@ -86,7 +81,7 @@ model Packages {
 
 model Program {
   id               Int                @id @default(autoincrement())
-  name             String
+  name             String  
   groups           Clients            @relation(fields: [groupsCode], references: [groupCodes])
   groupsCode       String
   status           Stats

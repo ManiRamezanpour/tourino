@@ -2,6 +2,14 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 async function main() {
+  await prisma.news.createMany({
+    data: [
+      { title: 'تمام سفر های این هفته تعطیل است', description: 'test1' },
+      { title: 'تمام سفر های این هفته تعطیل است', description: 'test2' },
+      { title: 'تمام سفر های این هفته تعطیل است', description: 'test3' },
+      { title: 'تمام سفر های این هفته تعطیل است', description: 'test4' },
+    ],
+  });
   await prisma.program.createMany({
     data: [
       {
