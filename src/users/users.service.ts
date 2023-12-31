@@ -88,4 +88,49 @@ export class UsersService {
       data: { Groups: [...(await currentUserGrpoups).Groups, groupCode] },
     });
   }
+  async findAllGadgets(id: number) {
+    const user = await this.prisma.user.findFirst({ where: { id } });
+    console.log(user);
+    return user;
+  }
+  async createUserGadgets(id: number, data: string) {
+    const currentUserGadgets = this.prisma.user.findFirst({
+      where: { id },
+    });
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { myGadgets: [...(await currentUserGadgets).myGadgets, data] },
+    });
+    return user;
+  }
+  async addUserFavoriteProgram(id: number, programId: number) {
+    const user = await this.prisma.user.findFirst({
+      where: { id },
+    });
+    if (!user) throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    await this.prisma.userFavoritesPrograms.create({
+      data: {
+        userId: id,
+        programId,
+      },
+    });
+    const program = await this.prisma.program.findFirst({
+      where: { id: programId },
+    });
+    return program;
+  }
+  async findUserFavoriteProgram(id: number) {
+    const user = await this.prisma.userFavoritesPrograms.findMany({
+      where: { userId: id },
+    });
+    const programs = [];
+    for (let i = 0; i < user.length; i++) {
+      const program = await this.prisma.program.findFirst({
+        where: { id: user[i].programId },
+      });
+      programs.push(program);
+    }
+    console.log(programs);
+    return programs;
+  }
 }
