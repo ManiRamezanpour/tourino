@@ -6,12 +6,10 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/create-program.dto';
-import { UpdateProgramDto } from './dto/update-program.dto';
 import { ProgramService } from './program.service';
 
 @Controller('program')
@@ -47,10 +45,10 @@ export class ProgramController {
       throw new HttpException('Not program found !', HttpStatus.NOT_FOUND);
     throw new HttpException({ data: program }, HttpStatus.FOUND);
   }
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProgramDto: UpdateProgramDto) {
-    return this.programService.update(+id, updateProgramDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateProgramDto: UpdateProgramDto) {
+  //   return this.programService.update(+id, updateProgramDto);
+  // }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {

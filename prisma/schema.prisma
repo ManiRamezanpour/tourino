@@ -11,24 +11,26 @@ datasource db {
 }
 
 model User {
-  id               Int                @id @default(autoincrement())
-  fullname         String
-  mobile           String
-  gender           String
-  nationalCode     String
-  birthday         String
-  city             String
-  image            String
-  fatherName       String
-  bloodCategory    String
-  specialIllness   String
-  emergencyMobile  String
-  otp              String             @default("12345")
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @default(now()) @updatedAt
-  Groups           String[]
-  Team             Team[]
-  ProgramRegisters ProgramRegisters[]
+  id                    Int                     @id @default(autoincrement())
+  fullname              String
+  mobile                String
+  gender                String
+  nationalCode          String
+  birthday              String
+  city                  String
+  image                 String
+  fatherName            String
+  bloodCategory         String
+  specialIllness        String
+  emergencyMobile       String
+  otp                   String                  @default("12345")
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @default(now()) @updatedAt
+  Groups                String[]
+  myGadgets             String[]                @default([""])
+  Team                  Team[]
+  ProgramRegisters      ProgramRegisters[]
+  UserFavoritesPrograms UserFavoritesPrograms[]
 }
 
 model Team {
@@ -43,32 +45,33 @@ model Team {
 }
 
 model Clients {
-  id               Int                @id @default(autoincrement())
-  company_name     String
-  company_logo     String
-  province         String
-  city             String
-  Address          String
-  Phones           String
-  Socials          String[]
-  website          String
-  cto_name         String
-  cto_nationCode   String
-  cto_birthday     String
-  cto_fatherName   String
-  cto_phone        String
-  email            String             @unique
-  username         String
-  password         String
-  accountStatus    Stats              @default(NOTACTIVE)
-  groupName        String
-  description      String
-  groupStatus      Stats              @default(ACTIVE)
-  groupCodes       String             @unique
-  Packages         Packages?          @relation(fields: [packagesId], references: [id])
-  packagesId       Int?
-  Program          Program[]
-  ProgramRegisters ProgramRegisters[]
+  id                     Int                      @id @default(autoincrement())
+  company_name           String
+  company_logo           String
+  province               String
+  city                   String
+  Address                String
+  Phones                 String
+  Socials                String[]
+  website                String
+  cto_name               String
+  cto_nationCode         String
+  cto_birthday           String
+  cto_fatherName         String
+  cto_phone              String
+  email                  String                   @unique
+  username               String
+  password               String
+  accountStatus          Stats                    @default(NOTACTIVE)
+  groupName              String
+  description            String
+  groupStatus            Stats                    @default(ACTIVE)
+  groupCodes             String                   @unique
+  Packages               Packages?                @relation(fields: [packagesId], references: [id])
+  packagesId             Int?
+  Program                Program[]
+  ProgramRegisters       ProgramRegisters[]
+  UserSuggestersPrograms UserSuggestersPrograms[]
 }
 
 model Packages {
@@ -80,16 +83,32 @@ model Packages {
 }
 
 model Program {
-  id               Int                @id @default(autoincrement())
-  name             String  
-  groups           Clients            @relation(fields: [groupsCode], references: [groupCodes])
-  groupsCode       String
-  status           Stats
-  time             String
-  departure        String
-  destination      String
-  price            String
-  ProgramRegisters ProgramRegisters[]
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  groups                Clients?                @relation(fields: [groupsCode], references: [groupCodes])
+  groupsCode            String?
+  images                String[]
+  description           String
+  status                Stats
+  price                 String
+  time                  String
+  departure             String
+  date                  String
+  days                  String
+  type                  String
+  capacity              String
+  access                String
+  leader                String
+  services              String[]
+  options               String[]
+  gadgets               String[]
+  cautions              String[]
+  placeOptions          String[]
+  things                String[]
+  stars                 String
+  maxBonuses            String
+  ProgramRegisters      ProgramRegisters[]
+  UserFavoritesPrograms UserFavoritesPrograms[]
 }
 
 model News {
@@ -111,7 +130,39 @@ model ProgramRegisters {
   status     ProgramsRegisterationStatus
 }
 
+model UserFavoritesPrograms {
+  id        Int     @id @default(autoincrement())
+  users     User?   @relation(fields: [userId], references: [id])
+  userId    Int
+  Programs  Program @relation(fields: [programId], references: [id])
+  programId Int
+}
+
+model UserSuggestersPrograms {
+  id          Int      @id @default(autoincrement())
+  name        String
+  groups      Clients  @relation(fields: [groupsCode], references: [groupCodes])
+  groupsCode  String
+  image       String[]
+  description String
+  status      Stats
+  price       String
+  time        String
+  departure   String
+  destination String
+  startPlace  String
+  type        String
+  capacity    String
+  access      String
+  services    String[]
+  options     String[]
+  gatgets     String[]
+  caitions    String
+  maxBonuses  String
+}
+
 // Controll roles of users
+
 enum Role {
   CLIENT
   ADMIN

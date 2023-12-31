@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
+import { NotFoundError } from 'rxjs';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { ProgramService } from 'src/program/program.service';
 import { AddUserGroup } from './dto/add-user-group.dto';
@@ -137,5 +138,57 @@ export class UsersController {
     const userId = parseInt(req.user.id);
     const programs = await this.program.findUserPrograms(userId);
     throw new HttpException(programs, HttpStatus.FOUND);
+  }
+
+  @ApiTags('User-Gatgets')
+  @UseGuards(JwtAuthGuard)
+  @Get('gadgets')
+  async getUserGadgets(@Request() req: any) {
+    const id = req.user.id;
+    const user = await this.usersService.findAllGadgets(id);
+    if (!user) throw new NotFoundError('User not found');
+    throw new HttpException({ data: user.myGadgets }, HttpStatus.FOUND);
+  }
+  @ApiTags('User-Gatgets')
+  @UseGuards(JwtAuthGuard)
+  @Post('gadgets')
+  async addUserGadgets(@Request() req: any, @Body() body: any) {
+    const id = req.user.id;
+    const user = await this.usersService.createUserGadgets(id, body.gadgets);
+    if (!user) throw new NotFoundError('User not found');
+    throw new HttpException({ data: user }, HttpStatus.OK);
+  }
+
+  @ApiTags('User-Programs')
+  @UseGuards(JwtAuthGuard)
+  @Post('favorite-programs/:programId')
+  async addUserFavoriteProgram(
+    @Request() req: any,
+    @Param('programId') programId: number,
+  ) {
+    const id = req.user.id;
+    const program = await this.program.findOne(+programId);
+    console.log(program);
+    if (!program)
+      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    const favorite = await this.usersService.addUserFavoriteProgram(
+      id,
+      +programId,
+    );
+    throw new HttpException(
+      { data: favorite, message: 'program added to your favorite' },
+      HttpStatus.OK,
+    );
+  }
+  @ApiTags('User-Programs')
+  @UseGuards(JwtAuthGuard)
+  @Get('favorite-programs')
+  async getUserFavoriteProgram(@Request() req: any) {
+    const id = req.user.id;
+    const favorites = await this.usersService.findUserFavoriteProgram(+id);
+    throw new HttpException(
+      { data: favorites, message: 'program added to your favorite' },
+      HttpStatus.OK,
+    );
   }
 }
