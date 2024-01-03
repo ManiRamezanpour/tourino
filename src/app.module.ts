@@ -9,11 +9,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProgramModule } from 'src/program/program.module';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
+import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientModule } from './client/client.module';
-import { AppController } from './controllers/app.controller';
-import { NewsModule } from './news/news.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [

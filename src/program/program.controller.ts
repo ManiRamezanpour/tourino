@@ -35,7 +35,7 @@ export class ProgramController {
         HttpStatus.NOT_FOUND,
       );
     }
-    throw new HttpException({ data: program }, HttpStatus.FOUND);
+    throw new HttpException({ data: program }, HttpStatus.OK);
   }
   @Get(':id')
   async findOne(@Param('id') id: number) {
@@ -43,7 +43,7 @@ export class ProgramController {
     console.log(program);
     if (!program)
       throw new HttpException('Not program found !', HttpStatus.NOT_FOUND);
-    throw new HttpException({ data: program }, HttpStatus.FOUND);
+    throw new HttpException({ data: program }, HttpStatus.OK);
   }
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateProgramDto: UpdateProgramDto) {
