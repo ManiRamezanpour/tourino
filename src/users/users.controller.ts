@@ -38,7 +38,7 @@ export class UsersController {
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    throw new HttpException({ data: user }, HttpStatus.FOUND);
+    throw new HttpException({ data: user }, HttpStatus.OK);
   }
   // UPDATE USER PROFILE
   @Put('/profile/update/')
@@ -56,22 +56,22 @@ export class UsersController {
   }
   // ADD TEAM
   @ApiTags('TEAM')
-  @Get('/team/')
+  @Get('/team')
   async getListOfMyTeam(@Request() req: any): Promise<HttpException | null> {
     const id = parseInt(req.user.id);
     const myTeam = await this.usersService.getListOfMyTeam(id);
-    return new HttpException({ data: myTeam }, HttpStatus.FOUND);
+    return new HttpException({ data: myTeam }, HttpStatus.OK);
   }
   // GET TEAM LIST
   @ApiTags('TEAM')
-  @Post('/team/')
+  @Post('/team')
   async addNewTeam(@Body() createTeamDto: CreateTeamDto, @Request() req: any) {
     const id = parseInt(req.user.id);
     await this.usersService.addnewTeam(id, createTeamDto);
   }
 
   // GET USER GROUPS
-  @ApiTags('User group')
+  @ApiTags('User-Group')
   @Get('/group/:id')
   async getUserGroup(@Request() req: any) {
     const id = parseInt(req.user.id);
@@ -87,11 +87,11 @@ export class UsersController {
     }
     throw new HttpException(
       { message: 'users group founded !', data: Groups },
-      HttpStatus.FOUND,
+      HttpStatus.OK,
     );
   }
   // ADD USER TO GROUP
-  @ApiTags('User group')
+  @ApiTags('User-Group')
   @Post('/group')
   async addUserGroups(@Request() req: any, @Body() add: AddUserGroup) {
     const id = parseInt(req.user.id);
@@ -110,7 +110,7 @@ export class UsersController {
     }
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
-  @ApiTags('User Programs')
+  @ApiTags('User-Programs')
   @Post('/programs/:groupCode/:programId')
   async registerUserPrograms(
     @Param('programId') programId: number,
@@ -137,7 +137,7 @@ export class UsersController {
   async getUserPrograms(@Request() req: any) {
     const userId = parseInt(req.user.id);
     const programs = await this.program.findUserPrograms(userId);
-    throw new HttpException(programs, HttpStatus.FOUND);
+    throw new HttpException(programs, HttpStatus.OK);
   }
 
   @ApiTags('User-Gatgets')
@@ -147,7 +147,7 @@ export class UsersController {
     const id = req.user.id;
     const user = await this.usersService.findAllGadgets(id);
     if (!user) throw new NotFoundError('User not found');
-    throw new HttpException({ data: user.myGadgets }, HttpStatus.FOUND);
+    throw new HttpException({ data: user.myGadgets }, HttpStatus.OK);
   }
   @ApiTags('User-Gatgets')
   @UseGuards(JwtAuthGuard)
