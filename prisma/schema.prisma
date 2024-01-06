@@ -120,14 +120,15 @@ model News {
 }
 
 model ProgramRegisters {
-  id         Int                         @id @default(autoincrement())
-  users      User?                       @relation(fields: [userId], references: [id])
-  userId     Int
-  groups     Clients                     @relation(fields: [groupsCode], references: [groupCodes])
-  groupsCode String
-  programs   Program?                    @relation(fields: [programId], references: [id])
-  programId  Int
-  status     ProgramsRegisterationStatus
+  id          Int                         @id @default(autoincrement())
+  users       User?                       @relation(fields: [userId], references: [id])
+  userId      Int
+  usersTeamId Int[]
+  groups      Clients                     @relation(fields: [groupsCode], references: [groupCodes])
+  groupsCode  String
+  programs    Program?                    @relation(fields: [programId], references: [id])
+  programId   Int
+  status      ProgramsRegisterationStatus
 }
 
 model UserFavoritesPrograms {

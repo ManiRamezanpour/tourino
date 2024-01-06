@@ -7,7 +7,7 @@ export class LoginDto {
   })
   mobile: string;
   @ApiProperty({
-    example: '1233',
+    example: '1234',
     required: true,
   })
   otp: string;

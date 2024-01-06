@@ -55,8 +55,10 @@ export class ClientService {
     return `This action returns all client`;
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOneByGroupCode(groupCode: string) {
+    return await this.prisma.clients.findFirst({
+      where: { groupCodes: groupCode },
+    });
   }
 
   async update(id: number) {
