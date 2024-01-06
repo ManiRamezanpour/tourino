@@ -13,6 +13,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { NotFoundError } from 'rxjs';
+import { ClientService } from 'src/client/client.service';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { ProgramService } from 'src/program/program.service';
 import { AddUserGroup } from './dto/add-user-group.dto';
@@ -26,7 +27,8 @@ export class UsersController {
   group: any;
   constructor(
     private readonly usersService: UsersService,
-    private program: ProgramService,
+    private readonly program: ProgramService,
+    private readonly client: ClientService,
   ) {}
 
   // GET USER PROFILE
@@ -72,13 +74,25 @@ export class UsersController {
 
   // GET USER GROUPS
   @ApiTags('User-Group')
+  @Get('/group')
+  async getUserGroups(@Request() req: any) {
+    const id = parseInt(req.user.id);
+    const user = await this.usersService.findById(id);
+    const { Groups } = user;
+    const usersGroups: any[] = [];
+    console.log(usersGroups);
+    for (let i = 0; i < Groups.length; i++) {
+      const group = await this.client.findOneByGroupCode(Groups[i]);
+      usersGroups.push(group);
+    }
+    return new HttpException({ data: usersGroups }, HttpStatus.OK);
+  }
   @Get('/group/:id')
   async getUserGroup(@Request() req: any) {
     const id = parseInt(req.user.id);
     const user = await this.usersService.findById(id);
     const { Groups } = user;
     console.log(Groups);
-
     if (Groups.length == 0) {
       throw new HttpException(
         { message: 'groups not found for this user' },
@@ -97,7 +111,6 @@ export class UsersController {
     const id = parseInt(req.user.id);
     const { groupCode } = add;
     console.log(groupCode);
-
     const groups = await this.usersService.addUserGroup(groupCode, id);
     if (groups) {
       throw new HttpException(
@@ -111,19 +124,17 @@ export class UsersController {
     throw new HttpException('user not added !', HttpStatus.FORBIDDEN);
   }
   @ApiTags('User-Programs')
-  @Post('/programs/:groupCode/:programId')
-  async registerUserPrograms(
-    @Param('programId') programId: number,
-    @Param('groupCode') groupCode: string,
-    @Request() req: any,
-  ) {
+  @Post('/programs')
+  async registerUserPrograms(@Request() req: any, @Body() res: any) {
     const userId = req.user.id;
-    console.log(userId);
+    console.log(res.usersTeamId);
     const create = await this.program.userRegisterForProgram(
       userId,
-      +programId,
-      groupCode,
+      res.programId,
+      res.groupCode,
+      res.usersTeamId,
     );
+
     if (!create)
       throw new HttpException('Not registered !!!', HttpStatus.BAD_REQUEST);
 

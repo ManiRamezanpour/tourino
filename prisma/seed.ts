@@ -2,6 +2,61 @@ import { PrismaClient, Stats } from '@prisma/client';
 
 const prisma = new PrismaClient();
 async function main() {
+  await prisma.packages.createMany({
+    data: [
+      {
+        name: 'golden',
+        price: '10',
+        expirationTime: '30Days',
+      },
+    ],
+  });
+  await prisma.clients.createMany({
+    data: [
+      {
+        packagesId: 1,
+        company_name: 'ALIBABA',
+        province: 'Mazandran',
+        city: 'Sari',
+        cto_name: 'Ali',
+        cto_nationCode: '2081356007',
+        cto_phone: '402934023',
+        email: 'manirmp@gmail.com',
+        username: 'manirmp',
+        password: '*******',
+        groupCodes: '2312312',
+        company_logo: '',
+        Address: '',
+        Phones: '',
+        website: '',
+        cto_birthday: '',
+        cto_fatherName: '',
+        groupName: '',
+        description: '',
+      },
+      {
+        packagesId: 1,
+        company_name: 'Snap',
+        province: 'tehran',
+        city: 'andimeshk',
+        cto_name: 'test',
+        cto_nationCode: '84534',
+        cto_phone: '84488324',
+        email: 'testclient@gmail.com',
+        username: 'testclient',
+        password: '*******',
+        groupCodes: '2312313',
+        company_logo: '',
+        Address: '',
+        Phones: '',
+        website: '',
+        cto_birthday: '',
+        cto_fatherName: '',
+        groupName: '',
+        description: '',
+      },
+    ],
+  });
   await prisma.news.createMany({
     data: [
       { title: 'تمام سفر های این هفته تعطیل است', description: 'test1' },
@@ -52,7 +107,7 @@ async function main() {
       },
       {
         name: 'چشمه بل',
-        groupsCode: '2312312',
+        groupsCode: '2312313',
         status: Stats.ACTIVE,
         time: '10 صبح',
         departure: 'میدان آزادی',

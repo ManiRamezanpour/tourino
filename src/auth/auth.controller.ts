@@ -36,7 +36,6 @@ export class AuthController {
     const { mobile, fullname } = createUserDto;
     // const otp: string = codeGenerator(6);
     const otp = '1234';
-    console.log(otp);
     return await this.userService.createUser({ mobile, fullname, otp });
   }
   // CLIENT REGISTER API
@@ -80,17 +79,18 @@ export class AuthController {
       mobile: loginDto.mobile,
       otp: loginDto.otp,
     });
+    if (!user) throw new HttpException('Invalid Mobile', HttpStatus.NOT_FOUND);
     if (user.otp != loginDto.otp) {
       return new HttpException('OTP is not valid !', HttpStatus.NOT_FOUND);
     }
-    if (!user) throw new HttpException('Invalid Mobile', HttpStatus.NOT_FOUND);
+
     const payload: {
       sub: any;
-      user: { role: any; fullname: any; id: any };
+      user: { role: string; fullname: string; id: number };
     } = {
       sub: user.id,
       user: {
-        role: 'CLIENT',
+        role: 'User',
         fullname: user.fullname,
         id: user.id,
       },

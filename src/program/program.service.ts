@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProgramsRegisterationStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProgramDto } from './dto/create-program.dto';
@@ -25,13 +25,6 @@ export class ProgramService {
     return await this.prisma.program.findFirst({ where: { id } });
   }
 
-  // async update(id: number, updateProgramDto: UpdateProgramDto) {
-  //   return await this.prisma.program.update({
-  //     where: { id },
-  //     data: updateProgramDto,
-  //   });
-  // }
-
   async remove(id: number) {
     return await this.prisma.program.delete({ where: { id } });
   }
@@ -40,17 +33,44 @@ export class ProgramService {
     userId: number,
     programId: number,
     groupsCode: string,
+    userTeamId: number[],
   ) {
+    for (let i = 1; i <= userTeamId.length; i++) {
+      const checkTeam = this.prisma.team.findFirst({
+        where: { id: userTeamId[i] },
+      });
+      if (!checkTeam)
+        throw new HttpException(
+          `team id inde ${i} is not valid`,
+          HttpStatus.NOT_FOUND,
+        );
+    }
+    //@ts-ignore
+    userTeamId = JSON.parse(userTeamId);
     return await this.prisma.programRegisters.create({
       data: {
         userId,
         programId: +programId,
-        groupsCode,
+        usersTeamId: userTeamId,
+        groupsCode: groupsCode,
         status: ProgramsRegisterationStatus.NOTPAYED,
       },
     });
   }
   async findUserPrograms(userId: number) {
-    return await this.prisma.programRegisters.findMany({ where: { userId } });
+    const userProgram = await this.prisma.programRegisters.findMany({
+      where: { userId },
+    });
+    // for();
+    // const userTeam: any[] = userProgram.usersTeamId
+    // for (let i = 0; i < userTeam.length; i++) {
+    //   const team = await this.prisma.team.findFirst({
+    //     where: { id: userTeam[i].id },
+    //   });
+    //   myTeam.push(team);
+    // }
+    // //@ts-ignore
+    // userProgram.usersTeamId = myTeam;
+    return userProgram;
   }
 }
