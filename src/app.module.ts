@@ -14,6 +14,7 @@ import { AppService } from './app.service';
 import { ClientModule } from './client/client.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { NewsModule } from './news/news.module';
+import { BonusModule } from './bonus/bonus.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { NewsModule } from './news/news.module';
     ProgramModule,
     NewsModule,
     GadgetsModule,
+    BonusModule,
   ],
   controllers: [AppController],
   providers: [

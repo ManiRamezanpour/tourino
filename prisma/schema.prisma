@@ -162,6 +162,12 @@ model UserSuggestersPrograms {
   maxBonuses  String
 }
 
+model Bonus {
+  id      Int    @id @default(autoincrement())
+  title   String
+  persent Int
+}
+
 // Controll roles of users
 
 enum Role {
