@@ -36,7 +36,28 @@ export class AuthController {
     const { mobile, fullname } = createUserDto;
     // const otp: string = codeGenerator(6);
     const otp = '1234';
-    return await this.userService.createUser({ mobile, fullname, otp });
+    const user = await this.userService.createUser({ mobile, fullname, otp });
+    const payload: {
+      sub: any;
+      user: { role: string; fullname: string; id: number };
+    } = {
+      sub: user.id,
+      user: {
+        role: 'User',
+        fullname: user.fullname,
+        id: user.id,
+      },
+    };
+    const token = this.jwt.sign(payload);
+    throw new HttpException(
+      {
+        data: {
+          token,
+        },
+        message: 'User Was Registered !',
+      },
+      HttpStatus.ACCEPTED,
+    );
   }
   // CLIENT REGISTER API
   @Post('/client/register')
