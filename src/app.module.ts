@@ -15,6 +15,7 @@ import { ClientModule } from './client/client.module';
 import { GadgetsModule } from './gadgets/gadgets.module';
 import { NewsModule } from './news/news.module';
 import { BonusModule } from './bonus/bonus.module';
+import { SuggestionModule } from './suggestion/suggestion.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BonusModule } from './bonus/bonus.module';
     NewsModule,
     GadgetsModule,
     BonusModule,
+    SuggestionModule,
   ],
   controllers: [AppController],
   providers: [
