@@ -57,18 +57,6 @@ async function main() {
       },
     ],
   });
-  await prisma.bonus.createMany({
-    data: [
-      {
-        title: 'women days',
-        persent: 10,
-      },
-      {
-        title: 'new years',
-        persent: 50,
-      },
-    ],
-  });
   await prisma.news.createMany({
     data: [
       { title: 'تمام سفر های این هفته تعطیل است', description: 'test1' },

@@ -164,9 +164,9 @@ model UserSuggestersPrograms {
 }
 
 model Bonus {
-  id     Int       @id @default(autoincrement())
-  type   BonusType
+  id     Int    @id @default(autoincrement())
   title  String
+  type   String
   amount Int
 }
 

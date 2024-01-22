@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBonusDto } from './dto/create-bonus.dto';
-import { UpdateBonusDto } from './dto/update-bonus.dto';
 
 @Injectable()
 export class BonusService {
@@ -18,7 +17,7 @@ export class BonusService {
     return this.prisma.bonus.findFirst({ where: { id } });
   }
 
-  update(id: number, updateBonusDto: UpdateBonusDto) {
+  update(id: number) {
     return `This action updates a #${id} bonus`;
   }
 

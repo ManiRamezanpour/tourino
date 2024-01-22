@@ -6,7 +6,6 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,7 +13,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 import { BonusService } from './bonus.service';
 import { CreateBonusDto } from './dto/create-bonus.dto';
-import { UpdateBonusDto } from './dto/update-bonus.dto';
 
 @Controller('bonus')
 @ApiTags('BUNUSED')
@@ -40,10 +38,10 @@ export class BonusController {
     return this.bonusService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBonusDto: UpdateBonusDto) {
-    return this.bonusService.update(+id, updateBonusDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBonusDto: UpdateBonusDto) {
+  //   return this.bonusService.update(+id, updateBonusDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

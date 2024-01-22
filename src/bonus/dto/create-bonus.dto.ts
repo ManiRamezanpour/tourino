@@ -4,5 +4,7 @@ export class CreateBonusDto {
   @ApiProperty({ required: true, example: 'birthday' })
   title: string;
   @ApiProperty({ required: true, example: '10' })
-  persent: number;
+  type: string;
+  @ApiProperty({ required: true, example: '10' })
+  amount: number;
 }
