@@ -74,7 +74,6 @@ async function main() {
       { title: 'تمام سفر های این هفته تعطیل است', description: 'test1' },
       { title: 'تمام سفر های این هفته تعطیل است', description: 'test2' },
       { title: 'تمام سفر های این هفته تعطیل است', description: 'test3' },
-      // { title: 'تمام سفر های این هفته تعطیل است', description: 'test4' },
     ],
   });
 

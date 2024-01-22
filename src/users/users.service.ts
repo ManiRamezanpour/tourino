@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 type userRegisterDto = {
   mobile: string;
   fullname: string;
-  otp: string;
+  status: string;
 };
 @Injectable()
 export class UsersService {
@@ -24,7 +24,6 @@ export class UsersService {
   }
   async createUser(dto: userRegisterDto) {
     console.log(typeof dto.mobile);
-
     const checkUser = await this.prisma.user.findFirst({
       where: { mobile: dto.mobile },
     });
@@ -38,7 +37,7 @@ export class UsersService {
     const data = {
       fullname: dto.fullname,
       mobile: dto.mobile,
-      otp: dto.otp,
+      status: dto.status,
       gender: '',
       nationalCode: '',
       birthday: '',

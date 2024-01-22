@@ -34,9 +34,12 @@ export class AuthController {
   async userRegister(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
     const { mobile, fullname } = createUserDto;
-    // const otp: string = codeGenerator(6);
-    const otp = '1234';
-    const user = await this.userService.createUser({ mobile, fullname, otp });
+    const status = '1234';
+    const user = await this.userService.createUser({
+      mobile,
+      fullname,
+      status,
+    });
     const payload: {
       sub: any;
       user: { role: string; fullname: string; id: number };
