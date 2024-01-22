@@ -23,7 +23,7 @@ model User {
   bloodCategory         String
   specialIllness        String
   emergencyMobile       String
-  otp                   String                  @default("12345")
+  status                String                  @default("12345")
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @default(now()) @updatedAt
   Groups                String[]
@@ -163,9 +163,16 @@ model UserSuggestersPrograms {
 }
 
 model Bonus {
-  id      Int    @id @default(autoincrement())
-  title   String
-  persent Int
+  id     Int       @id @default(autoincrement())
+  type   BonusType
+  title  String
+  amount Int
+}
+
+model ProgramPackage {
+  id    Int    @id @default(autoincrement())
+  name  String
+  price String
 }
 
 // Controll roles of users
@@ -173,6 +180,11 @@ model Bonus {
 enum Role {
   CLIENT
   ADMIN
+}
+
+enum BonusType {
+  Percent
+  Price
 }
 
 enum Stats {
