@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 type userRegisterDto = {
   mobile: string;
   fullname: string;
-  status: string;
+  otp: string;
 };
 @Injectable()
 export class UsersService {
@@ -37,7 +37,7 @@ export class UsersService {
     const data = {
       fullname: dto.fullname,
       mobile: dto.mobile,
-      otp: dto.status,
+      otp: dto.otp,
       status: 'not_verified',
       gender: '',
       nationalCode: '',
