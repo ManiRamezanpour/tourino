@@ -32,7 +32,7 @@ export class AuthService {
     return otp == UserCode ? true : false;
   }
 
-  async UserLogin(data: { mobile: string; otp: string }) {
+  async UserLogin(data: { mobile: string; status: string }) {
     const user = await this.userService.findOne(data.mobile);
     return user;
   }

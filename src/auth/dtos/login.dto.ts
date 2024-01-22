@@ -11,4 +11,5 @@ export class LoginDto {
     required: true,
   })
   otp: string;
+  status: string;
 }

@@ -23,7 +23,8 @@ model User {
   bloodCategory         String
   specialIllness        String
   emergencyMobile       String
-  status                String                  @default("12345")
+  otp                   String                  @default("12345")
+  status                String
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @default(now()) @updatedAt
   Groups                String[]

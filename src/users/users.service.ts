@@ -37,7 +37,8 @@ export class UsersService {
     const data = {
       fullname: dto.fullname,
       mobile: dto.mobile,
-      status: dto.status,
+      otp: dto.status,
+      status: 'not_verified',
       gender: '',
       nationalCode: '',
       birthday: '',
